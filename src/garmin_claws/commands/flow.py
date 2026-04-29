@@ -90,18 +90,9 @@ def flow_run(
         total_burned = m.get("total_kilocalories") or (bmr + active)
         net_goal = m.get("net_calorie_goal")
 
-        # Project based on time of day
-        now = datetime.now(UTC)
-        hours_elapsed = now.hour + now.minute / 60
-        # Assume BMR spreads evenly over 24h, active is bursty
-        bmr_per_hour = bmr / 24 if bmr else 0
-        projected_bmr = bmr_per_hour * 24  # BMR is fixed for the day
-        # Project active calories linearly if we have data
-        if hours_elapsed > 0 and active > 0:
-            projected_active = active * (24 / hours_elapsed)
-        else:
-            projected_active = active
-        projected_total = projected_bmr + projected_active
+        # Garmin formula: Projected = Resting (full 24h BMR) + Active (burned so far)
+        # BMR is already the full 24h figure. Active is actual burned, not projected.
+        projected_total = bmr + active
 
         data = {
             "date": resolved,
@@ -112,12 +103,10 @@ def flow_run(
             },
             "projected": {
                 "total_kilocalories": round(projected_total),
-                "bmr_kilocalories": round(projected_bmr),
-                "active_kilocalories": round(projected_active),
+                "bmr_kilocalories": round(bmr),
+                "active_kilocalories": round(active),
             },
             "net_goal": net_goal,
-            "time_of_day": now.strftime("%H:%M"),
-            "hours_elapsed": round(hours_elapsed, 1),
         }
         emit("calories", data, json_output)
         return
