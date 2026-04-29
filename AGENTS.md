@@ -57,12 +57,3 @@ When adding a new agent-facing command:
 4. Add the command to `CAPABILITIES` if agents should discover it.
 5. Update `skills/garmin-claws/SKILL.md` if it changes the recommended agent workflow.
 6. Run `pytest -q` before committing.
-
-## Git identity
-
-Use:
-
-```bash
-git config user.name "Clawsaurusrex"
-git config user.email "clawsaurusrex@agentmail.to"
-```
