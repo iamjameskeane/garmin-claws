@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import math
+from datetime import UTC, datetime
 from typing import Annotated, Any
 
 import typer
@@ -9,6 +11,7 @@ from garmin_claws.errors import ClawsError
 from garmin_claws.normalize import (
     build_daily_coach,
     build_trainability,
+    normalize_daily_stats,
     normalize_sleep_recovery,
     normalize_training_load_balance,
     normalize_training_readiness,
@@ -25,6 +28,16 @@ def flow_plan(
 ) -> None:
     """Describe the commands an agent should run for a named flow."""
     plans: dict[str, dict[str, Any]] = {
+        "calories": {
+            "flow": "calories",
+            "read_only": True,
+            "requires_auth": True,
+            "commands": [
+                "garmin-claws daily summary --date today --json",
+                "garmin-claws flow run calories --json",
+            ],
+            "output": "Calorie budget and burn data from Garmin. Agent combines with consumed data from lobster-roll.",
+        },
         "daily-brief": {
             "flow": "daily-brief",
             "read_only": True,
@@ -68,4 +81,44 @@ def flow_run(
     if flow == "daily-coach":
         emit("daily_coach", build_daily_coach(resolved, client), json_output)
         return
-    fail(ClawsError("GARMIN_FLOW_UNKNOWN", f"Unknown flow: {flow}", "Choose one of: trainability, daily-coach.", 3))
+    if flow == "calories":
+        raw = client.get_stats(resolved)
+        stats = normalize_daily_stats(raw, resolved)
+        m = stats["metrics"]
+        bmr = m.get("bmr_kilocalories") or 0
+        active = m.get("active_kilocalories") or 0
+        total_burned = m.get("total_kilocalories") or (bmr + active)
+        net_goal = m.get("net_calorie_goal")
+
+        # Project based on time of day
+        now = datetime.now(UTC)
+        hours_elapsed = now.hour + now.minute / 60
+        # Assume BMR spreads evenly over 24h, active is bursty
+        bmr_per_hour = bmr / 24 if bmr else 0
+        projected_bmr = bmr_per_hour * 24  # BMR is fixed for the day
+        # Project active calories linearly if we have data
+        if hours_elapsed > 0 and active > 0:
+            projected_active = active * (24 / hours_elapsed)
+        else:
+            projected_active = active
+        projected_total = projected_bmr + projected_active
+
+        data = {
+            "date": resolved,
+            "current": {
+                "bmr_kilocalories": bmr,
+                "active_kilocalories": active,
+                "total_burned": total_burned,
+            },
+            "projected": {
+                "total_kilocalories": round(projected_total),
+                "bmr_kilocalories": round(projected_bmr),
+                "active_kilocalories": round(projected_active),
+            },
+            "net_goal": net_goal,
+            "time_of_day": now.strftime("%H:%M"),
+            "hours_elapsed": round(hours_elapsed, 1),
+        }
+        emit("calories", data, json_output)
+        return
+    fail(ClawsError("GARMIN_FLOW_UNKNOWN", f"Unknown flow: {flow}", "Choose one of: trainability, daily-coach, calories.", 3))
