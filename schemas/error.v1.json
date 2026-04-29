@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iamjameskeane.github.io/garmin-claws/schemas/error.v1.json",
+  "title": "garmin-claws structured error response",
+  "type": "object",
+  "required": ["ok", "schema_version", "error", "warnings", "meta"],
+  "properties": {
+    "ok": {"const": false},
+    "schema_version": {"const": "garmin-claws.v1.error"},
+    "error": {
+      "type": "object",
+      "required": ["code", "message", "remediation"],
+      "properties": {
+        "code": {"type": "string"},
+        "message": {"type": "string"},
+        "remediation": {"type": "string"}
+      }
+    },
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "meta": {"type": "object"}
+  }
+}

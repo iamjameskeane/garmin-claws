@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iamjameskeane.github.io/garmin-claws/schemas/sleep_summary.v1.json",
+  "title": "garmin-claws sleep summary response",
+  "type": "object",
+  "required": ["ok", "schema_version", "data", "warnings", "meta"],
+  "properties": {
+    "ok": {"const": true},
+    "schema_version": {"const": "garmin-claws.v1.sleep_summary"},
+    "data": {
+      "type": "object",
+      "required": ["date", "metrics", "source"],
+      "properties": {
+        "date": {"type": "string"},
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "sleep_seconds": {"type": ["number", "null"]},
+            "deep_sleep_seconds": {"type": ["number", "null"]},
+            "light_sleep_seconds": {"type": ["number", "null"]},
+            "rem_sleep_seconds": {"type": ["number", "null"]},
+            "awake_seconds": {"type": ["number", "null"]},
+            "sleep_score": {"type": ["number", "null"]}
+          }
+        },
+        "source": {"type": "object"}
+      }
+    },
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "meta": {"type": "object"}
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iamjameskeane.github.io/garmin-claws/schemas/daily_summary.v1.json",
+  "title": "garmin-claws daily summary response",
+  "type": "object",
+  "required": ["ok", "schema_version", "data", "warnings", "meta"],
+  "properties": {
+    "ok": {"const": true},
+    "schema_version": {"const": "garmin-claws.v1.daily_summary"},
+    "data": {
+      "type": "object",
+      "required": ["date", "metrics", "source"],
+      "properties": {
+        "date": {"type": "string"},
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "steps": {"type": ["integer", "null"]},
+            "distance_meters": {"type": ["number", "null"]},
+            "active_kilocalories": {"type": ["number", "null"]},
+            "resting_heart_rate": {"type": ["number", "null"]},
+            "body_battery": {"type": ["number", "null"]},
+            "stress_avg": {"type": ["number", "null"]}
+          }
+        },
+        "source": {"type": "object"}
+      }
+    },
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "meta": {"type": "object"}
+  }
+}

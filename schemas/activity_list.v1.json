@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iamjameskeane.github.io/garmin-claws/schemas/activity_list.v1.json",
+  "title": "garmin-claws activity list response",
+  "type": "object",
+  "required": ["ok", "schema_version", "data", "warnings", "meta"],
+  "properties": {
+    "ok": {"const": true},
+    "schema_version": {"const": "garmin-claws.v1.activity_list"},
+    "data": {
+      "type": "object",
+      "required": ["activities"],
+      "properties": {
+        "activities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"type": ["integer", "null"]},
+              "name": {"type": ["string", "null"]},
+              "type": {"type": ["string", "null"]},
+              "start_time_local": {"type": ["string", "null"]},
+              "duration_seconds": {"type": ["number", "null"]},
+              "distance_meters": {"type": ["number", "null"]},
+              "average_heart_rate": {"type": ["number", "null"]}
+            }
+          }
+        }
+      }
+    },
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "meta": {"type": "object"}
+  }
+}
