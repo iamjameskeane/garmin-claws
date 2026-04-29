@@ -78,7 +78,16 @@ garmin-claws schema show daily_summary --json
 # Normalized data access
 garmin-claws daily summary --date today --json
 garmin-claws sleep summary --date yesterday --json
+garmin-claws sleep recovery --date today --json
+garmin-claws health status --date today --json
+garmin-claws training readiness --date today --json
+garmin-claws training load-balance --date today --json
 garmin-claws activity recent --limit 10 --json
+
+# Metric definitions for agent context
+garmin-claws metrics list --json
+garmin-claws metrics explain hrv_status --json
+garmin-claws metrics explain training_readiness --json
 
 # Compatibility aliases
 garmin-claws today --json
@@ -86,6 +95,8 @@ garmin-claws activities --limit 10 --json
 
 # Agent flows
 garmin-claws flow plan daily-brief --json
+garmin-claws flow run trainability --date today --json
+garmin-claws flow run daily-coach --date today --json
 ```
 
 ## Auth model
@@ -108,9 +119,33 @@ Schema files live in `schemas/` and are also available at runtime:
 garmin-claws schema show daily_summary --json
 garmin-claws schema show sleep_summary --json
 garmin-claws schema show activity_list --json
+garmin-claws schema show metric_definition --json
+garmin-claws schema show health_status --json
+garmin-claws schema show sleep_recovery --json
+garmin-claws schema show training_load_balance --json
+garmin-claws schema show trainability --json
+garmin-claws schema show daily_coach --json
 garmin-claws schema show error --json
 ```
 
+## Metric knowledge layer
+
+Agents should use `metrics explain <metric>` before interpreting Garmin-specific concepts. The built-in definitions explain what each metric means, what it is useful for, and what not to over-interpret. Important metrics include:
+
+- `training_readiness` — daily readiness gate, not a workout prescription.
+- `hrv_status` — recovery/stress trend relative to personal baseline.
+- `load_focus` — low aerobic / high aerobic / anaerobic distribution for choosing workout type.
+- `sleep_score` — sleep quality context, interpreted with overnight physiology.
+- `body_battery` — general energy/pacing signal.
+- `acute_load` — recent training stress.
+
+## Composite flows
+
+- `flow run trainability` answers: can the user train today, and how hard?
+- `flow run daily-coach` combines daily stats, sleep recovery, health status, training readiness, load balance, and a practical recommendation.
+
+These flows are read-only and non-medical. They should produce coaching-oriented suggestions with uncertainty, not diagnosis.
+
 ## Status
 
-Current scaffold: normalized daily/sleep/activity commands, agent response envelopes, structured errors, capabilities/schema introspection, a `daily-brief` flow plan, tests, and a bundled Hermes skill.
+Current scaffold: normalized daily/sleep/activity commands, metric definitions, health/sleep/training interpretation commands, trainability/daily-coach flows, agent response envelopes, structured errors, capabilities/schema introspection, tests, and a bundled Hermes skill.

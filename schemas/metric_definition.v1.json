@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iamjameskeane.github.io/garmin-claws/schemas/metric_definition.v1.json",
+  "type": "object",
+  "required": [
+    "ok",
+    "schema_version",
+    "data",
+    "warnings",
+    "meta"
+  ],
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "schema_version": {
+      "const": "garmin-claws.v1.metric_definition"
+    },
+    "data": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "plain_english",
+        "best_used_for",
+        "do_not_overinterpret",
+        "interpretation_rules",
+        "flow_usage"
+      ]
+    },
+    "warnings": {
+      "type": "array"
+    },
+    "meta": {
+      "type": "object"
+    }
+  }
+}

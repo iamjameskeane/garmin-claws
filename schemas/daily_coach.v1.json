@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iamjameskeane.github.io/garmin-claws/schemas/daily_coach.v1.json",
+  "type": "object",
+  "required": [
+    "ok",
+    "schema_version",
+    "data",
+    "warnings",
+    "meta"
+  ],
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "schema_version": {
+      "const": "garmin-claws.v1.daily_coach"
+    },
+    "data": {
+      "type": "object",
+      "required": [
+        "date",
+        "headline",
+        "health",
+        "sleep",
+        "training",
+        "daily",
+        "trainability",
+        "recommendation"
+      ]
+    },
+    "warnings": {
+      "type": "array"
+    },
+    "meta": {
+      "type": "object"
+    }
+  }
+}

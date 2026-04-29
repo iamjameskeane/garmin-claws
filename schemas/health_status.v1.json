@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iamjameskeane.github.io/garmin-claws/schemas/health_status.v1.json",
+  "type": "object",
+  "required": [
+    "ok",
+    "schema_version",
+    "data",
+    "warnings",
+    "meta"
+  ],
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "schema_version": {
+      "const": "garmin-claws.v1.health_status"
+    },
+    "data": {
+      "type": "object",
+      "required": [
+        "date",
+        "overall",
+        "metrics",
+        "within_range",
+        "out_of_range",
+        "unknown"
+      ]
+    },
+    "warnings": {
+      "type": "array"
+    },
+    "meta": {
+      "type": "object"
+    }
+  }
+}

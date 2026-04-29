@@ -92,11 +92,24 @@ Use this instead of relying on stale docs in prompt context.
 
 ## Preferred agent commands
 
+Use metric definitions before interpreting Garmin-specific concepts:
+
+```bash
+garmin-claws metrics list --json
+garmin-claws metrics explain training_readiness --json
+garmin-claws metrics explain hrv_status --json
+garmin-claws metrics explain load_focus --json
+```
+
 Use normalized JSON output:
 
 ```bash
 garmin-claws daily summary --date today --json
 garmin-claws sleep summary --date yesterday --json
+garmin-claws sleep recovery --date today --json
+garmin-claws health status --date today --json
+garmin-claws training readiness --date today --json
+garmin-claws training load-balance --date today --json
 garmin-claws activity recent --limit 10 --json
 ```
 
@@ -109,7 +122,16 @@ garmin-claws activities --limit 10 --json
 
 ## Daily brief workflow
 
-First inspect the flow:
+For most coaching questions, prefer the composite flows:
+
+```bash
+garmin-claws flow run trainability --date today --json
+garmin-claws flow run daily-coach --date today --json
+```
+
+`trainability` answers whether the user can train and the maximum sensible intensity. `daily-coach` combines daily stats, sleep recovery, health status, training readiness, load balance, and a practical recommendation.
+
+For a manual daily brief, first inspect the flow:
 
 ```bash
 garmin-claws flow plan daily-brief --json

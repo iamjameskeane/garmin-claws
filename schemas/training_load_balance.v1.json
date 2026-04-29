@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iamjameskeane.github.io/garmin-claws/schemas/training_load_balance.v1.json",
+  "type": "object",
+  "required": [
+    "ok",
+    "schema_version",
+    "data",
+    "warnings",
+    "meta"
+  ],
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "schema_version": {
+      "const": "garmin-claws.v1.training_load_balance"
+    },
+    "data": {
+      "type": "object",
+      "required": [
+        "date",
+        "diagnosis",
+        "categories",
+        "recommended_session_types"
+      ]
+    },
+    "warnings": {
+      "type": "array"
+    },
+    "meta": {
+      "type": "object"
+    }
+  }
+}

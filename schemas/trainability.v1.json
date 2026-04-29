@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iamjameskeane.github.io/garmin-claws/schemas/trainability.v1.json",
+  "type": "object",
+  "required": [
+    "ok",
+    "schema_version",
+    "data",
+    "warnings",
+    "meta"
+  ],
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "schema_version": {
+      "const": "garmin-claws.v1.trainability"
+    },
+    "data": {
+      "type": "object",
+      "required": [
+        "trainability",
+        "max_recommended_intensity",
+        "reasoning",
+        "cautions",
+        "readiness",
+        "sleep_recovery",
+        "load_balance"
+      ]
+    },
+    "warnings": {
+      "type": "array"
+    },
+    "meta": {
+      "type": "object"
+    }
+  }
+}
