@@ -116,7 +116,7 @@ def test_daily_summary_normalizes_raw_stats(monkeypatch, tmp_path):
                 "averageStressLevel": 23,
             }
 
-    monkeypatch.setattr("garmin_claws.cli.garmin_client", lambda: FakeGarmin())
+    monkeypatch.setattr("garmin_claws.commands.daily.garmin_client", lambda: FakeGarmin())
 
     result = runner.invoke(app, ["daily", "summary", "--date", "2026-04-29", "--json"])
 
@@ -145,7 +145,7 @@ def test_activity_recent_normalizes_raw_activities(monkeypatch):
                 }
             ]
 
-    monkeypatch.setattr("garmin_claws.cli.garmin_client", lambda: FakeGarmin())
+    monkeypatch.setattr("garmin_claws.commands.activity.garmin_client", lambda: FakeGarmin())
 
     result = runner.invoke(app, ["activity", "recent", "--limit", "2", "--json"])
 
@@ -199,7 +199,7 @@ def test_health_status_interprets_core_overnight_metrics(monkeypatch):
                 }
             }
 
-    monkeypatch.setattr("garmin_claws.cli.garmin_client", lambda: FakeGarmin())
+    monkeypatch.setattr("garmin_claws.commands.health.garmin_client", lambda: FakeGarmin())
 
     result = runner.invoke(app, ["health", "status", "--date", "2026-04-29", "--json"])
 
@@ -226,7 +226,7 @@ def test_training_load_balance_identifies_high_aerobic_shortage(monkeypatch):
                 "acuteChronicWorkloadRatio": 1.2,
             }
 
-    monkeypatch.setattr("garmin_claws.cli.garmin_client", lambda: FakeGarmin())
+    monkeypatch.setattr("garmin_claws.commands.training.garmin_client", lambda: FakeGarmin())
 
     result = runner.invoke(app, ["training", "load-balance", "--date", "2026-04-29", "--json"])
 
@@ -253,7 +253,7 @@ def test_sleep_recovery_combines_sleep_and_overnight_metrics(monkeypatch):
                 },
             }
 
-    monkeypatch.setattr("garmin_claws.cli.garmin_client", lambda: FakeGarmin())
+    monkeypatch.setattr("garmin_claws.commands.sleep.garmin_client", lambda: FakeGarmin())
 
     result = runner.invoke(app, ["sleep", "recovery", "--date", "2026-04-29", "--json"])
 
@@ -284,7 +284,7 @@ def test_trainability_flow_gates_intensity_from_recovery_and_load(monkeypatch):
         def get_sleep_data(self, day):
             return {"dailySleepDTO": {"sleepTimeSeconds": 8 * 3600, "sleepScore": 82}, "sleepScores": {"overall": {"value": 82}}, "healthStatus": {}}
 
-    monkeypatch.setattr("garmin_claws.cli.garmin_client", lambda: FakeGarmin())
+    monkeypatch.setattr("garmin_claws.commands.flow.garmin_client", lambda: FakeGarmin())
 
     result = runner.invoke(app, ["flow", "run", "trainability", "--date", "2026-04-29", "--json"])
 
@@ -331,7 +331,7 @@ def test_daily_coach_flow_returns_single_agent_friendly_recommendation(monkeypat
         def get_activities(self, start, limit):
             return []
 
-    monkeypatch.setattr("garmin_claws.cli.garmin_client", lambda: FakeGarmin())
+    monkeypatch.setattr("garmin_claws.commands.flow.garmin_client", lambda: FakeGarmin())
 
     result = runner.invoke(app, ["flow", "run", "daily-coach", "--date", "2026-04-29", "--json"])
 
